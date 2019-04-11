@@ -1,36 +1,30 @@
 package com.example.biocubicar.biocubicar.Activity
 
-import android.support.v4.view.PagerAdapter
-import com.example.biocubicar.biocubicar.Adapter.SlideAdapter
-import com.example.biocubicar.biocubicar.R
-import android.view.Menu
-import android.widget.Toast
-import android.view.MenuItem
-import android.view.View
-import kotlinx.android.synthetic.main.activity_biopila.*
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.net.Uri
-import java.nio.file.Files.exists
-import java.io.File.separator
-import android.os.Environment.getExternalStorageDirectory
-import java.io.File
-import java.io.FileOutputStream
-import java.util.*
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.opengl.ETC1
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
+import android.os.Environment.getExternalStorageDirectory
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
+import android.support.v4.view.PagerAdapter
+import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import com.example.biocubicar.biocubicar.R
+import com.example.biocubicar.biocubicar.helperDB.database
 import com.example.biocubicar.biocubicar.model.BiopilaModel
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_biopila.*
+import org.jetbrains.anko.db.classParser
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.db.select
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 
@@ -39,7 +33,7 @@ class BiopilaActivity : AppCompatActivity() {
     lateinit var images : Array<Int>
     lateinit var adapter : PagerAdapter //= SlideAdapter(applicationContext, images) //TODO lateinit
     var idBiopila : Int = -1
-    var obj_biopila : BiopilaModel = BiopilaModel(-1, "", "", -1.0,-1.0,-1.0, mutableListOf())
+    var obj_biopila: BiopilaModel = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0)
     val REQUEST_PERM_WRITE_STORAGE = 102
     private val CAPTURE_PHOTO = 104
     internal var imagePath: String? = ""
@@ -175,7 +169,7 @@ class BiopilaActivity : AppCompatActivity() {
             val out = FileOutputStream(file)
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
             imagePath = file.absolutePath
-            obj_biopila.images.add(file.absolutePath) //Se guarda la url de la imagen en el objeto biopila.
+            // obj_biopila.images.add(file.absolutePath) //Se guarda la url de la imagen en el objeto biopila.
             out.flush()
             out.close()
 
@@ -235,7 +229,15 @@ class BiopilaActivity : AppCompatActivity() {
         var messageToast = ""
         try {
             setValuesOfFields()
-            //todo guardar
+            database.use {
+                insert("biopila",
+                        "title" to obj_biopila.title,
+                        "description" to obj_biopila.description,
+                        "latitude" to obj_biopila.latitude,
+                        "longitude" to obj_biopila.longitude,
+                        "volume" to obj_biopila.volume)
+            }
+
             messageToast = "Se agregó la biopila "+ obj_biopila.title + " correctamente."
 
         } catch (ex : Exception) {
@@ -244,7 +246,7 @@ class BiopilaActivity : AppCompatActivity() {
 
         Toast.makeText(this, messageToast, Toast.LENGTH_SHORT).show()
         cleanFields()
-        obj_biopila = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0, mutableListOf())
+        obj_biopila = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0)
     }
 
     fun updateBiopila() {
@@ -255,6 +257,13 @@ class BiopilaActivity : AppCompatActivity() {
                 //TODO editar
                 messageToast = "La biopila "+ obj_biopila.title+ " fue editada correctamente."
             } else {
+                database.use {
+                    var result = select("biopila").where("title = {titleParam}", "titleParam" to "fede")
+                    var data = result.parseSingle(classParser<BiopilaModel>())
+                    etTitle.setText(data.title)
+                    etDescription.setText(data.description)
+                    etVolume.setText(data.volume.toString())
+                }
                 messageToast = "Debe seleccionar la biopila que desea editar"
             }
         } catch (ex : Exception) {
@@ -278,7 +287,7 @@ class BiopilaActivity : AppCompatActivity() {
 
         Toast.makeText(this, messageToast, Toast.LENGTH_SHORT).show()
         cleanFields()
-        obj_biopila = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0, mutableListOf())
+        obj_biopila = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0)
     }
 
     fun initViewCalculateVolume() {
