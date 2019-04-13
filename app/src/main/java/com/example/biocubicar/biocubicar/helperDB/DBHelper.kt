@@ -31,7 +31,7 @@ class DBHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "biopiladb") {
         db?.createTable("biopilaImage", true,
                 "id" to INTEGER + PRIMARY_KEY,
                 "id_biopila" to INTEGER,
-                "name_image" to TEXT,
+                "url_image" to TEXT,
                 FOREIGN_KEY("id_biopila", "biopila", "id"))
 
     }

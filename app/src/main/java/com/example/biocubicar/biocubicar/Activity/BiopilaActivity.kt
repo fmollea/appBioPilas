@@ -19,6 +19,7 @@ import android.widget.Toast
 import com.example.biocubicar.biocubicar.R
 import com.example.biocubicar.biocubicar.helperDB.database
 import com.example.biocubicar.biocubicar.model.BiopilaModel
+import com.example.biocubicar.biocubicar.model.ImageListModel
 import kotlinx.android.synthetic.main.activity_biopila.*
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.insert
@@ -30,11 +31,11 @@ import java.util.*
 
 class BiopilaActivity : AppCompatActivity() {
 
-    lateinit var images : Array<Int>
-    lateinit var adapter : PagerAdapter //= SlideAdapter(applicationContext, images) //TODO lateinit
-    var idBiopila : Int = -1
-    var obj_biopila: BiopilaModel = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0)
-    val REQUEST_PERM_WRITE_STORAGE = 102
+    private var imagesList = ArrayList<ImageListModel>()
+    private lateinit var adapter: PagerAdapter //= SlideAdapter(applicationContext, images) //TODO lateinit
+    private var idBiopila: Int = -1
+    private var obj_biopila: BiopilaModel = BiopilaModel(-1, "", "", -1.0, -1.0, -1.0)
+    private val REQUEST_PERM_WRITE_STORAGE = 102
     private val CAPTURE_PHOTO = 104
     internal var imagePath: String? = ""
 
@@ -169,12 +170,13 @@ class BiopilaActivity : AppCompatActivity() {
             val out = FileOutputStream(file)
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
             imagePath = file.absolutePath
-            // obj_biopila.images.add(file.absolutePath) //Se guarda la url de la imagen en el objeto biopila.
+            //imagesList.add.ima.add(file.absolutePath) //Se guarda la url de la imagen en el objeto biopila.
             out.flush()
             out.close()
 
             //Se agregan valores para que aparezca en todas las galerias
             val values = ContentValues();
+            values.put(MediaStore.Images.Media._ID, idBiopila.toString());
             values.put(MediaStore.Images.Media.TITLE, getTitleForImage());
             values.put(MediaStore.Images.Media.DESCRIPTION, getDescriptionForImage());
             values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis ());
@@ -227,6 +229,7 @@ class BiopilaActivity : AppCompatActivity() {
 
     fun addBiopila() {
         var messageToast = ""
+
         try {
             setValuesOfFields()
             database.use {
@@ -236,6 +239,24 @@ class BiopilaActivity : AppCompatActivity() {
                         "latitude" to obj_biopila.latitude,
                         "longitude" to obj_biopila.longitude,
                         "volume" to obj_biopila.volume)
+            }
+
+            database.use {
+                var result = select("Biopila")
+                        .whereArgs("title = {titleP} and description = {descrP}",
+                                "titleP" to obj_biopila.title,
+                                "descrP" to obj_biopila.description)
+                var data = result.parseSingle(classParser<BiopilaModel>())
+                idBiopila = data.id
+            }
+
+            for (item in imagesList) {
+                item.id_biopila = idBiopila
+                database.use {
+                    insert("biopilaImage",
+                            "id_biopila" to item.id_biopila,
+                            "url_image" to item.url_image)
+                }
             }
 
             messageToast = "Se agregó la biopila "+ obj_biopila.title + " correctamente."
