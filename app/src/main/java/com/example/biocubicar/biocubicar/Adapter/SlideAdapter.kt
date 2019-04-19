@@ -6,22 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import com.example.biocubicar.biocubicar.R
-
+import com.squareup.picasso.Picasso
 
 class SlideAdapter : PagerAdapter {
 
     var context : Context
-    var images : Array<Int>
+    var images: ArrayList<String>
     lateinit var inflater : LayoutInflater
 
-    constructor(context: Context, images : Array<Int>) : super() {
+    constructor(context: Context, images: ArrayList<String>) : super() {
         this.context = context
         this.images = images
     }
 
-    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object` as RelativeLayout
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object` as View
 
     override fun getCount(): Int = images.size
 
@@ -30,13 +29,15 @@ class SlideAdapter : PagerAdapter {
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var view : View = inflater.inflate(R.layout.slider_image_item, container, false)
         image = view.findViewById(R.id.slider_image)
-        image.setBackgroundResource(images[position])
+        Picasso.with(context)
+                .load(images[position])
+                .into(image)
         container!!.addView(view)
 
         return view
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container!!.removeView(`object`as RelativeLayout)
+        container!!.removeView(`object` as View)
     }
 }

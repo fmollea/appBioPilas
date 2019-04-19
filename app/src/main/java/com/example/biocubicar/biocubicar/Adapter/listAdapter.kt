@@ -1,5 +1,7 @@
 package com.example.biocubicar.biocubicar.Adapter
 
+import android.net.Uri
+import android.os.Environment
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +9,9 @@ import com.example.biocubicar.biocubicar.Listener.RecyclerBiopilaListener
 import com.example.biocubicar.biocubicar.R
 import com.example.biocubicar.biocubicar.inflate
 import com.example.biocubicar.biocubicar.model.BiopilaModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.row_biopila.view.*
+import java.io.File
 
 class listAdapter(private val biopilas: List<BiopilaModel>, private val listener: RecyclerBiopilaListener)
     : RecyclerView.Adapter<listAdapter.ViewHolder>() {
@@ -20,9 +24,18 @@ class listAdapter(private val biopilas: List<BiopilaModel>, private val listener
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(biopila: BiopilaModel, listener: RecyclerBiopilaListener) = with(itemView) {
+            val root = Environment.getExternalStorageDirectory().toString()
+            val myDir = File(root + "/biopilas")
+            var nameImage = "Image-BC-00" + biopila.id + "-0.jpg"
+            var file = File(myDir, nameImage)
+
             row_title.text = biopila.title
             row_description.text = biopila.description
+            Picasso.with(context)
+                    .load(Uri.fromFile(file).toString())
+                    .into(row_image)
             setOnClickListener { listener.onClick(biopila, adapterPosition) }
+            btDeleteRow.setOnClickListener { listener.onDelete(biopila, adapterPosition) }
         }
     }
 }
