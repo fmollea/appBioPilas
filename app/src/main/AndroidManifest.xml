@@ -26,6 +26,16 @@
         <activity android:name=".Activity.BiopilaActivity" />
         <activity android:name=".Activity.ListarBiopilaActivity" />
         <activity android:name=".Activity.CalculateVolume"></activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.fmollea.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_list"></meta-data>
+        </provider>
     </application>
 
 </manifest>

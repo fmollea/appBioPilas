@@ -2,7 +2,6 @@ package com.example.biocubicar.biocubicar.Activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
@@ -87,8 +86,8 @@ class ListarBiopilaActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "No hay biopilas cargadas para mostrar", Toast.LENGTH_LONG).show()
         }
-
-        adapter = (listAdapter(biopilaList, object : RecyclerBiopilaListener {
+        val myDir = getExternalFilesDir("biopilas")
+        adapter = (listAdapter(myDir, biopilaList, object : RecyclerBiopilaListener {
             override fun onClick(biopila: BiopilaModel, position: Int) {
                 initViewBiopila(biopila.id)
             }
@@ -116,8 +115,7 @@ class ListarBiopilaActivity : AppCompatActivity() {
 
     fun deleteImages(id_biopila: Int) {
         var index = 0
-        val root = Environment.getExternalStorageDirectory().toString()
-        val myDir = File(root + "/biopilas")
+        val myDir = getExternalFilesDir("biopilas")
         var nameImage = "Image-BC-00" + id_biopila + "-" + index + ".jpg"
         var file = File(myDir, nameImage)
 

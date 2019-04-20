@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen>
+    <external-path
+        name="biopilas_imgs"
+        path="Android/data/com.example.biocubicar.biocubicar/files/biopilas" />
+</PreferenceScreen>

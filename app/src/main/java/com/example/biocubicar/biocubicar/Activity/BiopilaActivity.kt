@@ -5,15 +5,13 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Environment.getExternalStorageDirectory
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
-import android.support.v4.view.PagerAdapter
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -26,7 +24,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_biopila.*
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 
@@ -34,17 +31,13 @@ class BiopilaActivity : AppCompatActivity() {
 
     private var imagesList = ArrayList<String>()
     private val dao = BiopilaDao()
-    private lateinit var adapter: PagerAdapter //= SlideAdapter(applicationContext, images) //TODO lateinit
     private var idBiopila: Int = -1
     private var obj_biopila: BiopilaModel = BiopilaModel(-1, "", "", .0, .0, .0)
     private val REQUEST_PERM_WRITE_STORAGE = 102
     private val REQUEST_PERM_FINE_LOCATION = 1
     private val CAPTURE_PHOTO = 104
-    internal var imagePath: String? = ""
+    internal var pictureFilePath: String? = ""
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var file: File
-    private lateinit var values: ContentValues
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,68 +159,47 @@ class BiopilaActivity : AppCompatActivity() {
 
     private fun takePhotoByCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(cameraIntent, CAPTURE_PHOTO)
+        if (cameraIntent.resolveActivity(packageManager) != null) {
+            var pictureFile: File? = null
+            try {
+                pictureFile = getPictureFile()
+            } catch (ex: Exception) {
+            }
+
+            if (pictureFile != null) {
+                var photoURI = FileProvider.getUriForFile(this,
+                        "com.fmollea.android.fileprovider",
+                        pictureFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(cameraIntent, CAPTURE_PHOTO)
+            }
+        }
+    }
+
+    private fun getPictureFile(): File {
+        val storageDir = getExternalFilesDir("biopilas")
+        val nameImage = "Image-BC-00" + idBiopila + "-" + imagesList.size + ".jpg"
+        val image = File(storageDir, nameImage)
+        pictureFilePath = image.absolutePath
+        return image
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, returnIntent: Intent?) {
         super.onActivityResult(requestCode, resultCode, returnIntent)
 
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                CAPTURE_PHOTO -> {
-
-                    val capturedBitmap = returnIntent!!.extras!!.get("data") as Bitmap
-                    saveImage(capturedBitmap)
-                } else -> {
-            }
+        if (requestCode == CAPTURE_PHOTO && resultCode == Activity.RESULT_OK) {
+            val imgFile = File(pictureFilePath)
+            if (imgFile.exists()) {
+                imagesList.add(Uri.fromFile(imgFile).toString())
+                var values = ContentValues()
+                values.put("_data", imgFile.absolutePath);
+                val cr = getContentResolver();
+                cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                loadViewPager()
             }
         }
     }
-
-    private fun saveImage(finalBitmap: Bitmap) {
-
-        val root = getExternalStorageDirectory().toString()
-        val myDir = File(root + "/biopilas")
-
-        if (!myDir.exists()) myDir.mkdirs()
-
-        //Genero el nombre de la imagen.
-        val nameImage = "Image-BC-00" + idBiopila + "-" + imagesList.size + ".jpg"
-        file = File(myDir, nameImage)
-        if (file.exists()) file.delete() //si ya existe se elimina
-
-        try {
-            val out = FileOutputStream(file)
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
-            imagePath = file.absolutePath
-            imagesList.add(Uri.fromFile(file).toString()) //Se guarda la url de la imagen en el objeto biopila.
-            out.flush()
-            out.close()
-
-            //Se agregan valores para que aparezca en todas las galerias
-            val values = ContentValues();
-            values.put(MediaStore.Images.Media._ID, idBiopila.toString());
-            values.put(MediaStore.Images.Media.TITLE, getTitleForImage());
-            values.put(MediaStore.Images.Media.DESCRIPTION, getDescriptionForImage());
-            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis ());
-            values.put(MediaStore.Images.ImageColumns.BUCKET_ID, file.toString().toLowerCase(Locale.getDefault()).hashCode());
-            values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, file.getName().toLowerCase(Locale.getDefault()));
-            values.put("_data", file.getAbsolutePath());
-            val cr = getContentResolver();
-            cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            loadViewPager()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun getTitleForImage() : String = etTitle.text.toString()
-
-    private fun getDescriptionForImage() : String = etDescription.text.toString()
-
-    /**
-     * limpia los campos de la vista
-     */
+    
     fun cleanFields() {
         etTitle.setText("")
         etDescription.setText("")
@@ -265,8 +237,7 @@ class BiopilaActivity : AppCompatActivity() {
     }
 
     fun loadImages() {
-        val root = getExternalStorageDirectory().toString()
-        val myDir = File(root + "/biopilas")
+        val myDir = getExternalFilesDir("biopilas")
         var nameImage = "Image-BC-00" + idBiopila + "-" + imagesList.size + ".jpg"
         var file = File(myDir, nameImage)
 
