@@ -45,13 +45,13 @@ class CalculateVolume : AppCompatActivity() {
     }
 
     private fun calculate(): Double {
-        var h = java.lang.Double.parseDouble(etH.text.toString())
-        var a1 = java.lang.Double.parseDouble(etA1.text.toString())
-        var a2 = java.lang.Double.parseDouble(etA2.text.toString())
-        var b1 = java.lang.Double.parseDouble(etB1.text.toString())
-        var b2 = java.lang.Double.parseDouble(etB2.text.toString())
+        var h = etH.text.toString().toDouble()
+        var a1 = etA1.text.toString().toDouble()
+        var a2 = etA2.text.toString().toDouble()
+        var b1 = etB1.text.toString().toDouble()
+        var b2 = etB2.text.toString().toDouble()
 
-        return (h * (a1 * b1 + a2 * b2 + (a1 + a2) * (b1 + b2))) / 6
+        return (h * (a1 * a2 + b1 * b2 + (a1 + b1) * (a2 + b2))) / 6
     }
 
     private fun saveResult(volume: Double): Boolean {

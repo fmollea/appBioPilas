@@ -15,6 +15,7 @@ import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.EditText
 import android.widget.Toast
 import com.example.biocubicar.biocubicar.Adapter.SlideAdapter
 import com.example.biocubicar.biocubicar.R
@@ -23,6 +24,7 @@ import com.example.biocubicar.biocubicar.model.BiopilaModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_biopila.*
+import kotlinx.android.synthetic.main.activity_calculate_volume.*
 import java.io.File
 import java.util.*
 
@@ -32,7 +34,7 @@ class BiopilaActivity : AppCompatActivity() {
     private var imagesList = ArrayList<String>()
     private val dao = BiopilaDao()
     private var idBiopila: Int = -1
-    private var obj_biopila: BiopilaModel = BiopilaModel(-1, "", "", .0, .0, .0)
+    private var obj_biopila: BiopilaModel = BiopilaModel(-1, "", "", -.1, -.1, -.1, -.1, -.1, -.1)
     private val REQUEST_PERM_WRITE_STORAGE = 102
     private val REQUEST_PERM_FINE_LOCATION = 1
     private val CAPTURE_PHOTO = 104
@@ -199,13 +201,16 @@ class BiopilaActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     fun cleanFields() {
-        etTitle.setText("")
-        etDescription.setText("")
-        etLatitude.setText("0")
-        etLongitude.setText("0")
-        etVolume.setText("0")
+        etTitle.text = null
+        etDescription.text = null
+        etLatitude.text = null
+        etLongitude.text = null
+        etVolume.text = null
+        etHTP.text = null
+        etTemperature.text = null
+        etMoisture.text = null
         imagesList.clear()
         loadViewPager()
     }
@@ -214,19 +219,57 @@ class BiopilaActivity : AppCompatActivity() {
      * asigna los valores de la vista al objeto biopila
      */
     fun setValuesViewToObject() {
-        obj_biopila.title = etTitle.text.toString()
-        obj_biopila.description = etDescription.text.toString()
-        obj_biopila.latitude = etLatitude.text.toString().toDouble()
-        obj_biopila.longitude = etLongitude.text.toString().toDouble()
-        obj_biopila.volume = etVolume.text.toString().toDouble()
+        if (!etTitle.text.isNullOrEmpty()){
+            obj_biopila.title = etTitle.text.toString()
+        }
+        if (!etDescription.text.isNullOrEmpty()){
+            obj_biopila.description = etDescription.text.toString()
+        }
+        if (!etLatitude.text.isNullOrEmpty()) {
+            obj_biopila.latitude = etLatitude.text.toString().toDouble()
+        }
+        if (!etLongitude.text.isNullOrEmpty()) {
+            obj_biopila.longitude = etLongitude.text.toString().toDouble()
+        }
+        if (!etVolume.text.isNullOrEmpty()) {
+            obj_biopila.volume = etVolume.text.toString().toDouble()
+        }
+        if (!etHTP.text.isNullOrEmpty()) {
+            obj_biopila.htp = etHTP.text.toString().toDouble()
+        }
+        if (!etTemperature.text.isNullOrEmpty()) {
+            obj_biopila.temperature = etTemperature.text.toString().toDouble()
+        }
+        if (!etMoisture.text.isNullOrEmpty()) {
+            obj_biopila.moisture = etMoisture.text.toString().toDouble()
+        }
     }
 
     fun setValuesObjectToView() {
-        etTitle.setText(obj_biopila.title)
-        etDescription.setText(obj_biopila.description)
-        etLatitude.setText(obj_biopila.latitude.toString())
-        etLongitude.setText(obj_biopila.longitude.toString())
-        etVolume.setText(obj_biopila.volume.toString())
+        if (!obj_biopila.title.isNullOrEmpty()){
+            etTitle.setText(obj_biopila.title)
+        }
+        if (!obj_biopila.description.isNullOrEmpty()){
+            etDescription.setText(obj_biopila.description)
+        }
+        if (obj_biopila.latitude != -.1){
+            etLatitude.setText(obj_biopila.latitude.toString())
+        }
+        if (obj_biopila.longitude != -.1) {
+            etLongitude.setText(obj_biopila.longitude.toString())
+        }
+        if (obj_biopila.volume != -.1) {
+            etVolume.setText(obj_biopila.volume.toString())
+        }
+        if (obj_biopila.htp != -.1) {
+            etHTP.setText(obj_biopila.htp.toString())
+        }
+        if (obj_biopila.temperature != -.1) {
+            etTemperature.setText(obj_biopila.temperature.toString())
+        }
+        if (obj_biopila.moisture != -.1) {
+            etMoisture.setText(obj_biopila.moisture.toString())
+        }
     }
 
     /**
@@ -308,7 +351,7 @@ class BiopilaActivity : AppCompatActivity() {
                 messageToast = "Se eliminó la biopila " + obj_biopila.title + " correctamente."
                 deleteImages(idBiopila)
                 idBiopila = -1
-                obj_biopila = BiopilaModel(-1, "", "", .0, .0, .0)
+                obj_biopila = BiopilaModel(-1, "", "", -.1, -.1, -.1, -.1,-.1,-.1)
                 cleanFields()
                 supportActionBar?.title = "Cargar una biopila"
             } else {

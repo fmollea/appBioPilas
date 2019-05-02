@@ -6,19 +6,18 @@ import org.jetbrains.anko.db.*
 import java.util.*
 
 
-class BiopilaDao : DAO {
+class BiopilaDao : DaoInterface {
 
     override fun getDao(id_item: Int, context: Context): BiopilaModel {
-        var result_dao = BiopilaModel(-1, "", "", .0, .0, .0)
+        var result_dao = BiopilaModel(-1, "", "", -.1, -.1, -.1, -.1,-.1,-.1)
         try {
             context.database.use {
                 var result = select("biopila")
                         .whereArgs("id = {id_bio}",
                                 "id_bio" to id_item)
                 var data = result.parseSingle(classParser<BiopilaModel>())
-                result_dao = data;
+                result_dao = data
             }
-
 
             return result_dao
         } catch (ex: Exception) {
@@ -31,10 +30,13 @@ class BiopilaDao : DAO {
             context.database.use {
                 insert("biopila",
                         "title" to (item as BiopilaModel).title,
-                        "description" to (item as BiopilaModel).description,
-                        "latitude" to (item as BiopilaModel).latitude,
-                        "longitude" to (item as BiopilaModel).longitude,
-                        "volume" to (item as BiopilaModel).volume)
+                        "description" to (item).description,
+                        "latitude" to (item).latitude,
+                        "longitude" to (item).longitude,
+                        "volume" to (item).volume,
+                        "htp" to (item).htp,
+                        "temperature" to (item).temperature,
+                        "moisture" to (item).moisture)
             }
             return true
 
@@ -51,7 +53,10 @@ class BiopilaDao : DAO {
                         "description" to item.description,
                         "longitude" to item.longitude,
                         "latitude" to item.latitude,
-                        "volume" to item.volume)
+                        "volume" to (item).volume,
+                        "htp" to (item).htp,
+                        "temperature" to (item).temperature,
+                        "moisture" to (item).moisture)
                         .whereArgs("id = {id_bio}",
                                 "id_bio" to id_item)
                         .exec()

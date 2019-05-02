@@ -25,14 +25,11 @@ class DBHelper(ctx: Context) : ManagedSQLiteOpenHelper(ctx, "biopiladb") {
                 "description" to TEXT,
                 "latitude" to REAL,
                 "longitude" to REAL,
-                "volume" to REAL
+                "volume" to REAL,
+                "htp" to REAL,
+                "temperature" to REAL,
+                "moisture" to REAL
         )
-
-        db?.createTable("biopilaImage", true,
-                "id" to INTEGER + PRIMARY_KEY,
-                "id_biopila" to INTEGER,
-                "url_image" to TEXT,
-                FOREIGN_KEY("id_biopila", "biopila", "id"))
 
     }
 

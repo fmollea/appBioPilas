@@ -32,12 +32,12 @@ class SlideAdapter : PagerAdapter {
         Picasso.with(context)
                 .load(images[position])
                 .into(image)
-        container!!.addView(view)
+        container.addView(view)
 
         return view
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container!!.removeView(`object` as View)
+        container.removeView(`object` as View)
     }
 }

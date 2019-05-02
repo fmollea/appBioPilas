@@ -6,5 +6,8 @@ data class BiopilaModel(
         var description: String,
         var latitude: Double,
         var longitude: Double,
-        var volume: Double
+        var volume: Double,
+        var htp: Double,
+        var temperature: Double,
+        var moisture: Double
 )

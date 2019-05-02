@@ -16,224 +16,221 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_circle"
+            android:text="Agregar"
+            android:textAllCaps="false"
+            android:textColor="@color/textButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_circle"
+            android:text="Editar"
+            android:textAllCaps="false"
+            android:textColor="@color/textButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btAdd"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_circle"
+            android:text="Eliminar"
+            android:textAllCaps="false"
+            android:textColor="@color/textButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btEdit"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/lineImage"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_biopila" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_biopila"
+        app:layout_constraintVertical_bias="0.0">
 
-    <EditText
-        android:id="@+id/etTitle"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Título"
-        android:inputType="textPersonName"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/lineTexts"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lineImage" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_biopila">
 
-    <EditText
-        android:id="@+id/etDescription"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Descripción"
-        android:inputType="textPersonName"
-        android:singleLine="false"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/lineCoordenadas"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lineTexts" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="384dp"
+                android:layout_height="230dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etLatitude"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Latitud"
-        android:inputType="numberDecimal"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/lineVolume"
-        app:layout_constraintEnd_toStartOf="@+id/lineVertica1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lineCoordenadas" />
 
-    <EditText
-        android:id="@+id/etLongitude"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Longitud"
-        android:inputType="numberDecimal"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/lineVolume"
-        app:layout_constraintEnd_toStartOf="@+id/lineVertical2"
-        app:layout_constraintStart_toEndOf="@+id/etLatitude"
-        app:layout_constraintTop_toTopOf="@+id/lineCoordenadas" />
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Título"
+                android:inputType="textPersonName"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/viewPager" />
 
-    <EditText
-        android:id="@+id/etVolume"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="Volumen"
-        android:inputType="numberDecimal"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/lineBotom"
-        app:layout_constraintEnd_toStartOf="@+id/lineVertical2"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline8" />
+            <EditText
+                android:id="@+id/etDescription"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Descripción"
+                android:inputType="textPersonName"
+                android:singleLine="false"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etTitle" />
 
-    <Button
-        android:id="@+id/btAdd"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/button_circle"
-        android:text="Agregar"
-        android:textAllCaps="false"
-        android:textColor="@color/textButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lineBotom" />
+            <EditText
+                android:id="@+id/etLatitude"
+                android:layout_width="144dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Latitud"
+                android:inputType="numberDecimal"
+                android:textSize="18dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
-    <Button
-        android:id="@+id/btEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/button_circle"
-        android:text="Editar"
-        android:textAllCaps="false"
-        android:textColor="@color/textButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btDelete"
-        app:layout_constraintStart_toEndOf="@+id/btAdd"
-        app:layout_constraintTop_toTopOf="@+id/lineBotom" />
+            <EditText
+                android:id="@+id/etLongitude"
+                android:layout_width="144dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Longitud"
+                android:inputType="numberDecimal"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@+id/btLocalitation"
+                app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
-    <Button
-        android:id="@+id/btDelete"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/button_circle"
-        android:text="Eliminar"
-        android:textAllCaps="false"
-        android:textColor="@color/textButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lineBotom" />
+            <EditText
+                android:id="@+id/etVolume"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="Volumen"
+                android:inputType="numberDecimal"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toStartOf="@+id/btCalculate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etLatitude" />
 
-    <ImageButton
-        android:id="@+id/btCalculate"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/lineBotom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/lineVertical2"
-        app:layout_constraintTop_toTopOf="@+id/lineVolume"
-        app:srcCompat="@drawable/calculate" />
+            <ImageButton
+                android:id="@+id/btCalculate"
+                android:layout_width="55dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btLocalitation"
+                app:srcCompat="@drawable/calculate" />
 
-    <ImageButton
-        android:id="@+id/btLocalitation"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/lineVolume"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/lineVertical2"
-        app:layout_constraintTop_toTopOf="@+id/lineCoordenadas"
-        app:srcCompat="@drawable/mark" />
+            <ImageButton
+                android:id="@+id/btLocalitation"
+                android:layout_width="53dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etDescription"
+                app:srcCompat="@drawable/mark" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/lineBotom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.90" />
+            <EditText
+                android:id="@+id/etTemperature"
+                android:layout_width="158dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="Temperatura Cº"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etVolume" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/lineImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.44" />
+            <EditText
+                android:id="@+id/etMoisture"
+                android:layout_width="158dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="% Humedad"
+                app:layout_constraintStart_toEndOf="@+id/etTemperature"
+                app:layout_constraintTop_toBottomOf="@+id/etVolume" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/lineVertica1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.40" />
+            <EditText
+                android:id="@+id/etHTP"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="Registro HTP"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etTemperature" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/lineVertical2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.80" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/lineVolume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.79" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/lineCoordenadas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.68" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/lineTexts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.57
-" />
-
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
